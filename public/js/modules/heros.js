@@ -15,7 +15,7 @@ export class Personnage {
     defensePos(){
         this.atk *= 0.5;
         this.hp *= 2.5;
-        console.log(`${this.name} prend une posture défensive.
+        console.log(`${this.name} prend une posture défensive. Il augmente ses chances d'être attaqué.
         ⟰ ♥ = ${this.hp}
         ⟱ ⚔ = ${this.atk}`);
     }

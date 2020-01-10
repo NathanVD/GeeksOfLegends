@@ -3,10 +3,10 @@ import {Boss} from "./modules/bosses.js";
 
 // VARIABLES
     //Heros: Nom(.name),vie(.hp),attaque(.atk),stat supp(.rage,.mana,.arrows)
-    let warrior = new Guerrier(prompt("Nom du guerrier ?"),100,20,0);
-    let wizard = new Mage(prompt("Nom du mage ?"),100,20,0);
-    let archer = new Archer(prompt("Nom de l'archer ?"),100,20,0);
-    let players = [warrior,wizard,archer];
+    let warrior = new Guerrier("War",100,20,0); //prompt("Nom du guerrier ?")
+    let wizard = new Mage("Wiz",100,20,0); //prompt("Nom du mage ?")
+    let archer = new Archer("Arc",100,20,0); //prompt("Nom de l'archer ?")
+    let alive = [warrior,wizard,archer];
 
     let pointsPool = [300,60]; //Health pool, Attack pool
     let confirm = false;
@@ -18,6 +18,7 @@ import {Boss} from "./modules/bosses.js";
     let chronos = new Boss("Chronos",666,666,30);
     let lilith = new Boss("Lilith",250,250,70);
     let bosses = [sauron,chronos,lilith];
+    let targets = [warrior,wizard,archer];
     let boss;
     
     let riddles = [
@@ -31,7 +32,7 @@ import {Boss} from "./modules/bosses.js";
         "paradoxe"
     ];
 
-    let choice,baseHp,baseAtk;
+    let choice,baseAtk;
 // END VARIABLES
 
 // FONTIONS
@@ -59,7 +60,7 @@ function distrib(hero,nomStat,stat,statHero) {
 }
 
 //combat
-// function fight(players,boss,) {
+// function fight(alive,boss,) {
     
 // }
 // END FONCTIONS
@@ -92,7 +93,6 @@ function distrib(hero,nomStat,stat,statHero) {
     //         }
     //     } while (confirm != true && confirm != false);
     // }
-    baseHP = [warrior.hp,wizard.hp,archer.hp];
     baseAtk = [warrior.atk,wizard.atk,archer.atk];
     console.log("Voici les %cHéros %c:","color: darkgoldenrod","color: black");
     console.log(warrior)
@@ -116,36 +116,66 @@ Ainsi, ${warrior.name} le guerrier, ${wizard.name} le mage et ${archer.name} l'a
 
 // TEST méthode riddle
 // sauron.hp = 2
-// sauron.cruelRiddle(riddles[1],answers[1],players);
+// sauron.cruelRiddle(riddles[1],answers[1],alive);
 
-while (boss.hp > 0 && players.length > 0) {
+while (boss.hp > 0 && alive.length-1 > 0) {
     //Choix de la posture
-    for (let i = 0; i < players.length; i++) {
-        choice = prompt(`Choisissez la posture de ${players[i].name} :
+    for (let i = 0; i < alive.length; i++) {
+        console.log(i);
+        console.log(alive);
+        console.log(targets);
+        choice = parseInt(prompt(`Choisissez la posture de ${alive[i].name} :
     (1) Attaque (+⚔/-♥)
     (2) Défense (-⚔/+♥)
-    (3) Défaut (base ⚔/base ♥)`);
+    (3) Défaut (base ⚔/base ♥)`));
         switch (choice) {
             case 1: //Posture d'attaque
-                players[i].attackPos();
+                alive[i].attackPos();
                 break;
             case 2: //Posture de défense
-                players[i].defensePos();
+                alive[i].defensePos();
+                targets.push(alive[i]);
                 break;
             default: //Pas de posture particulières
-            console.log(`${players[i].name} ne prend pas de posture particulière.
-    ♥ ${players[i].hp} 
-    ⚔ ${players[i].atk}`);
+            console.log(`${alive[i].name} ne prend pas de posture particulière.
+    ♥ ${alive[i].hp} 
+    ⚔ ${alive[i].atk}`);
         }
     }
+
+    console.log(targets)
+    boss.hp -= 100;
+    console.log(`${boss.name} a ${boss.hp}`);
+    archer.hp = 0;
+
+
+
     //Reset des postures
-    for (let i = 0; i < players.length; i++) {
-        if (players[i].atk > baseAtk[i] || players[i].atk < baseAtk[i]) {
-            players[i].hp = baseHp[i];
-            players[i].atk = baseAtk[i];
-            console.log(`${players[i].name} relâche sa posture : ♥ ${players[i].hp} ⚔ ${players[i].atk}`);
-        } else {
-            console.log(`${players[i].name} : ♥ ${players[i].hp} ⚔ ${players[i].atk}`);
+    for (let i = 0; i < alive.length; i++) { //posture offensive
+        if (alive[i].hp > 0) {
+            if (alive[i].atk > baseAtk[i]) {
+                alive[i].hp /= 0.75;
+                alive[i].atk /= 1.4;
+                console.log(`${alive[i].name} relâche sa posture offensive: ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`);
+            } else if(alive[i].atk < baseAtk[i]) { //posture défensive
+                alive[i].hp /= 2.5;
+                alive[i].atk /= 0.5;
+                targets.pop();
+                console.log(`${alive[i].name} relâche sa posture défensive: ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`);
+            } else {
+                console.log(`${alive[i].name} : ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`);
+            }
+        }
+    }
+
+    //Supression des morts
+    for (let i = 0; i < alive.length; i++) {
+        if (alive[i].hp <= 0) {
+            console.log(`${alive[i].name} est mort`);
+            alive.splice(i,1);
+            targets.splice(i,1);
+            console.log("Les survivants :");
+            console.log(alive);
         }
     }
 }
