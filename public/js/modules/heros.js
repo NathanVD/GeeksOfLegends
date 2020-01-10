@@ -8,12 +8,16 @@ export class Personnage {
     attackPos(){
         this.atk *= 1.4;
         this.hp *= 0.75;
-        console.log(`${this.name} prend une posture offensive.`);
+        console.log(`${this.name} prend une posture offensive.
+        ⟰ ⚔ = ${this.atk}
+        ⟱ ♥ = ${this.hp}`);
     }
     defensePos(){
         this.atk *= 0.5;
         this.hp *= 2.5;
-        console.log(`${this.name} prend une posture défensive.`);
+        console.log(`${this.name} prend une posture défensive.
+        ⟰ ♥ = ${this.hp}
+        ⟱ ⚔ = ${this.atk}`);
     }
 }
 

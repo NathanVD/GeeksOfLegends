@@ -19,9 +19,9 @@ export class Boss {
                 if (solve == -1){
                     countdown--
                     if (countdown > 0) {
-                        console.log(`%c${this.name} : "%cHAHAHAHAHA !!! %cRaté. Il ne vous reste que ${countdown} essais !"`,"color:darkmagenta","color:black;font-weight:800;","font-weight:600");
+                        console.log(`%c${this.name} : "%cHAHAHAHAHA !!! %cRaté. IL NE VOUS RESTE QUE ${countdown} ESSAIS !"`,"color:darkmagenta","color:black;font-weight:800;","font-weight:600");
                     } else {
-                        console.log(`%c${this.name} : "%cHAHAHAHAHA !!! %cRaté. Il ne vous reste aucun essai !"`,"color:darkmagenta","color:black;font-weight:800;","font-weight:600");
+                        console.log(`%c${this.name} : "%cHAHAHAHAHA !!! %cRaté. IL NE VOUS RESTE AUCUN ESSAI !"`,"color:darkmagenta","color:black;font-weight:800;","font-weight:600");
                     }
                 }
             } while (solve == -1 && countdown > 0)
@@ -31,11 +31,11 @@ export class Boss {
                 if (solution == "marron") {
                     console.log(`%c${this.name} %c: "Putain, il est fort ce con..."`,"color:darkmagenta","color:black;font-weight:600;");
                 } else {
-                    console.log(`%c${this.name} %c: "NOOOOOOON !!! %cComment avez-vous pu trouver la solution ?"`,"color:darkmagenta","color:black;font-weight:800;","font-weight:600");
+                    console.log(`%c${this.name} %c: "NOOOOOOON !!! %cCOMMENT AVEZ VOUS TROUVÉ LA SOLUTION ?"`,"color:darkmagenta","color:black;font-weight:800;","font-weight:600");
                 }
                 console.log(`Vous avez vaincu %c${this.name}%c.`,"color:darkmagenta","color:black")
             }else{
-                console.log(`%c${this.name} : "%cVous avez PERDU ! %cMOUHAHAHAHA !!!"`,"color:darkmagenta","color:black;font-weight:600;","font-weight:800");
+                console.log(`%c${this.name} : "%cVOUS AVEZ PERDU ! %cMOUHAHAHAHA !!!"`,"color:darkmagenta","color:black;font-weight:600;","font-weight:800");
                 for(let i=0;i<3;i++){
                     joueurs[i].hp = 0;
                     console.log(`%c☠ %c${joueurs[i].name} %c est mort.`,"font-size:20px","color:darkgoldenrod","color:black");
