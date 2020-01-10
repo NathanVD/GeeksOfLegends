@@ -1,10 +1,9 @@
 //Classe de personnages
 export class Personnage {
-    constructor(nom,pv,attaque,statSupp){
+    constructor(nom,pv,attaque){
         this.name = nom;
         this.hp = pv;
         this.atk = attaque;
-        this.statSupp = statSupp;
     }
     attackPos(){
         this.atk *= 1.4;
