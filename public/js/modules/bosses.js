@@ -7,7 +7,7 @@ export class Boss {
         this.atk = attaque;
     }
     cruelRiddle(énigme,solution,players){
-        if (this.hp < (this.maxHp*20)/100) {
+        if (this.hp < this.maxHp * 0.2) {
             console.log(`%c${this.name} %cutilise %c"Cruel Riddle"%c, vous avez 3 essais pour répondre à son énigme sans quoi il détruira votre groupe.`,"color:darkmagenta","color:black","color:crimson;background:black","color:black");
             let solve;
             let countdown = 3;
