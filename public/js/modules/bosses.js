@@ -9,7 +9,7 @@ export class Boss {
     attack(targets){
         let choice = targets[parseInt(Math.random()*targets.length)];
         choice.hp -= this.atk;
-        console.log(`%c${this.name}%c attaque %c${choice.name}%c et lui inflige ${this.atk} dégâts !!!`,"color:darkmagenta","color:black","color:darkgoldenrod","color:black");
+        console.log(`%c${this.name}%c attaque %c${choice.name}%c et lui inflige ${this.atk} dégâts !!!`,"color:darkmagenta","color:black",`color:${choice.color}`,"color:black");
     }
     cruelRiddle(énigme,solution,joueurs){
         if (this.hp > 0) {

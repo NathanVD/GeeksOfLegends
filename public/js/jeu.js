@@ -87,14 +87,14 @@ function distrib(hero,nomStat,stat,statHero) {
                 alert("Entrez une valeur entière positive.");
             }
         } while (statHero < 0);
-        if (statHero > stat) {
-            alert("Vous n'avez pas assez de points à disposition. ${stat} points disponibles.");
-        } else if (statHero < stat) {
+        if (statHero <= stat) {
             if (nomStat == "Health Points") {
                 hero.hp = statHero;
             } else {
                 hero.atk = statHero;
             }
+        } else if (statHero > stat) {
+            alert("Vous n'avez pas assez de points à disposition. ${stat} points disponibles.");
         } else {
             if (nomStat == "Health Points") {
                 statHero = 100;
@@ -226,14 +226,6 @@ while (boss.hp > 0 && alive.length > 0) {
     }
 
     //Supression des morts
-    // alive.forEach(element => {
-    //     if (element.hp <= 0) {
-    //         console.log(`%c☠ %c${element.name}%c est mort.`,"font-size:20px",`color:${element.color}`,"color:black");
-    //         alive.splice(alive.indexOf(element),1);
-    //         console.log(alive);
-    //         targets.splice(alive.indexOf(element),1);
-    //     }
-    // });
     for (let i = alive.length-1; i >= 0; i--) {
         if (alive[i].hp <= 0) {
             console.log(`%c☠ %c${alive[i].name}%c est mort.`,"font-size:20px",`color:${alive[i].color}`,"color:black");

@@ -8,15 +8,15 @@ export class Personnage {
         this.color = couleur;
     }
     attackPos(){
-        this.atk *= 1.4;
-        this.hp *= 0.75;
+        this.atk = Math.floor(this.atk*1.4);
+        this.hp =  Math.floor(this.hp*0.75);
         console.log(`${this.name} prend une posture offensive.
         ⟰ ⚔ = ${this.atk}
         ⟱ ♥ = ${this.hp}`);
     }
     defensePos(){
-        this.atk *= 0.5;
-        this.hp *= 2.5;
+        this.atk = Math.floor(this.atk * 0.5);
+        this.hp = Math.floor(this.hp * 2.5);
         console.log(`${this.name} prend une posture défensive. Il augmente ses chances d'être attaqué.
         ⟰ ♥ = ${this.hp}
         ⟱ ⚔ = ${this.atk}`);
