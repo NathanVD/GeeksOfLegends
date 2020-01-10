@@ -173,7 +173,6 @@ while (boss.hp > 0 && alive.length > 0) {
 
     // Choix de la posture
     for (let i = 0; i < alive.length; i++) {
-        console.log(i+1);
         choice = parseInt(prompt(`Choisissez la posture de ${alive[i].name} :
     (1) Attaque (+⚔/-♥)
     (2) Défense (-⚔/+♥)
@@ -235,11 +234,10 @@ while (boss.hp > 0 && alive.length > 0) {
     //         targets.splice(alive.indexOf(element),1);
     //     }
     // });
-    for (let i = alive.length; i > 0; i--) {
+    for (let i = alive.length-1; i >= 0; i--) {
         if (alive[i].hp <= 0) {
             console.log(`%c☠ %c${alive[i].name}%c est mort.`,"font-size:20px",`color:${alive[i].color}`,"color:black");
             alive.splice(i,1);
-            console.log(alive);
             targets.splice(i,1);
         }
     }
