@@ -1,11 +1,10 @@
 //Classe de bosses
-export class Bosses {
+export class Boss {
     constructor(nom,pv,pvMax,attaque){
         this.name = nom;
         this.hp = pv;
         this.maxHp = pvMax;
         this.atk = attaque;
-        this.statSupp = statSupp;
     }
     cruelRiddle(énigme,solution,players){
         if (this.hp < (this.maxHp*20)/100) {
