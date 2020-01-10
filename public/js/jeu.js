@@ -2,21 +2,19 @@ import {Guerrier,Mage,Archer} from "./modules/heros.js";
 import {Boss} from "./modules/bosses.js";
 
 // VARIABLES
-    //Heros: Nom(.name),vie(.hp),attaque(.atk),stat supp(.rage,.mana,.arrows)
-    let warrior = new Guerrier("War",100,20,0); //prompt("Nom du guerrier ?")
-    let wizard = new Mage("Wiz",100,20,0); //prompt("Nom du mage ?")
-    let archer = new Archer("Arc",100,20,0); //prompt("Nom de l'archer ?")
+    // Heros: Nom(.name),vie(.hp),attaque(.atk),couleur(.color),stat supp(.rage,.mana,.arrows)
+    let warrior = new Guerrier("Guerrier","",100,20,"darkred",0);
+    let wizard = new Mage("Mage","",100,20,"darkblue",0);
+    let archer = new Archer("Archer","",100,20,"forestgreen",0);
     let alive = [warrior,wizard,archer];
 
-    let pointsPool = [300,60]; //Health pool, Attack pool
-    let confirm = false;
-    let statHero;
+    let pointsPool, statHero, autoConfirm;
     let manaPools = [7,9,10];
 
-    //Bosses : Nom,vie,vie max,attaque
-    let sauron = new Boss("Sauron",300,300,60);
-    let chronos = new Boss("Chronos",666,666,30);
-    let lilith = new Boss("Lilith",250,250,70);
+    // Bosses : Nom,vie,vie max,attaque
+    let sauron = new Boss("Sauron",100,300,60);
+    let chronos = new Boss("Chronos",100,666,30);
+    let lilith = new Boss("Lilith",100,250,70);
     let bosses = [sauron,chronos,lilith];
     let targets = [warrior,wizard,archer];
     let boss;
@@ -35,65 +33,117 @@ import {Boss} from "./modules/bosses.js";
     let choice,baseAtk;
 // END VARIABLES
 
-// FONTIONS
-//ditribution des points
+// FONCTIONS
+// Confirmer
+function confirm(message,auto) {
+    let confirm
+    if (auto == true) {
+        confirm = true;
+    } else {
+        do {
+            confirm = prompt(message)
+            if (confirm.toLowerCase() == "oui" || confirm == "") {
+                confirm = true;
+            } else if (confirm.toLowerCase() == "non") {
+                confirm = false;
+            } else {
+                confirm = "nope"
+                alert("Veuillez entrer 'oui' ou 'non'.")
+            }
+        } while (confirm != true && confirm != false);
+    }
+    return confirm
+}
+// Nommer les héros
+function name(hero) {
+    let name = prompt(`Nom du ${hero.class} ?`);
+    if (name == "") {
+        switch (hero.class) {
+            case "Guerrier":
+                return "War";
+            case "Mage":
+                return "Wiz";
+            case "Archer":
+                return "Arc";
+        } 
+    } else {
+        return name;
+    }
+    
+}
+// Ditribution des points
 function distrib(hero,nomStat,stat,statHero) {
     console.log(`Vous avez accès à ${stat} ${nomStat} à distribuer entre vos héros.`);
     do {
         do {
-            statHero = parseInt(prompt(`Combien de ${nomStat} souhaitez-vous donner à ${hero.name} ?`));
-            if (statHero < 0 || isNaN(statHero)) {
+            if (nomStat == "Health Points") {
+                statHero = parseInt(prompt(`Combien de ${nomStat} souhaitez-vous donner à ${hero.name} ?
+(Default: 100)`));
+            } else {
+                statHero = parseInt(prompt(`Combien de ${nomStat} souhaitez-vous donner à ${hero.name} ?
+(Default: 20)`));
+            }
+            if (statHero < 0) {
                 alert("Entrez une valeur entière positive.");
             }
-        } while (statHero < 0 || isNaN(statHero));
+        } while (statHero < 0);
         if (statHero > stat) {
-            alert("Vous n'avez pas assez de points à disposition.");
-        } else {
+            alert("Vous n'avez pas assez de points à disposition. ${stat} points disponibles.");
+        } else if (statHero < stat) {
             if (nomStat == "Health Points") {
                 hero.hp = statHero;
             } else {
                 hero.atk = statHero;
             }
+        } else {
+            if (nomStat == "Health Points") {
+                statHero = 100;
+            } else {
+                statHero = 20;
+            }
         }
     } while (statHero > stat);
     return statHero;
 }
-
-//combat
-// function fight(alive,boss,) {
-    
-// }
 // END FONCTIONS
 
 // SETUP
+    // mana et flèches
     wizard.mana = manaPools[parseInt(Math.random()*3)];
     archer.arrows = parseInt(Math.random()*5+7);
-    // while (confirm == false) {
-    //     pointsPool[0] -= distrib(warrior,"Health Points",pointsPool[0],statHero);
-    //     pointsPool[0] -= distrib(wizard,"Health Points",pointsPool[0],statHero);
-    //     pointsPool[0] -= distrib(archer,"Health Points",pointsPool[0],statHero);
-    //     pointsPool[1] -= distrib(warrior,"Attack Points",pointsPool[1],statHero);
-    //     pointsPool[1] -=  distrib(wizard,"Attack Points",pointsPool[1],statHero);
-    //     pointsPool[1] -=  distrib(archer,"Attack Points",pointsPool[1],statHero);
-    //     do {
-    //         confirm = prompt(`Il vous reste ${pointsPool[0]} HP et ${pointsPool[1]} Atk en pool.
-    //     Souhaitez vous confirmer ceci ?
-    //         - Warrior : ♥ ${warrior.hp} / ⚔ ${warrior.atk}
-    //         - Mage : ♥ ${wizard.hp} / ⚔ ${wizard.atk}
-    //         - Archer : ♥ ${archer.hp} / ⚔ ${archer.atk}
-    //     -> oui / non`)
-    //         if (confirm.toLowerCase() == "oui") {
-    //             confirm = true;
-    //         } else if (confirm.toLowerCase() == "non") {
-    //             confirm = false;
-    //             pointsPool = [300,60];
-    //         } else {
-    //             confirm = "nope"
-    //             alert("Veuillez entrer 'oui' ou 'non'.")
-    //         }
-    //     } while (confirm != true && confirm != false);
-    // }
+
+    // noms
+    do {
+        warrior.name = name(warrior);
+        wizard.name = name(wizard);
+        archer.name = name(archer);
+    } while (confirm(`Souhaitez vous confirmer ceci ?
+    - Warrior : ${warrior.name}
+    - Mage : ${wizard.name}
+    - Archer : ${archer.name}
+-> oui / non`,false) == false)
+    
+    // stats
+    do {
+        pointsPool = [300,60];  //Health pool, Attack pool
+        pointsPool[0] -= distrib(warrior,"Health Points",pointsPool[0],statHero);
+        pointsPool[0] -= distrib(wizard,"Health Points",pointsPool[0],statHero);
+        pointsPool[0] -= distrib(archer,"Health Points",pointsPool[0],statHero);
+        pointsPool[1] -= distrib(warrior,"Attack Points",pointsPool[1],statHero);
+        pointsPool[1] -= distrib(wizard,"Attack Points",pointsPool[1],statHero);
+        pointsPool[1] -= distrib(archer,"Attack Points",pointsPool[1],statHero);
+        if (pointsPool[0] == 300 && pointsPool[1] == 60) {
+            autoConfirm = true;
+        }
+    } while (confirm(`Il vous reste ${pointsPool[0]} HP et ${pointsPool[1]} Atk en pool.
+Souhaitez vous confirmer ceci ?
+        - Warrior : ♥ ${warrior.hp} / ⚔ ${warrior.atk}
+        - Mage : ♥ ${wizard.hp} / ⚔ ${wizard.atk}
+        - Archer : ♥ ${archer.hp} / ⚔ ${archer.atk}
+-> oui / non`,autoConfirm) == false)
     baseAtk = [warrior.atk,wizard.atk,archer.atk];
+
+    // présentation héros terminés
     console.log("Voici les %cHéros %c:","color: darkgoldenrod","color: black");
     console.log(warrior)
     console.log(wizard)
@@ -103,27 +153,27 @@ function distrib(hero,nomStat,stat,statHero) {
     
     
     `)
+
+    // choix boss
     boss = bosses[parseInt(Math.random()*3)]
+
+    // mise en situation
     console.log(`Une menace plane sur le monde. En effet, un mal ancestral s'est réveillé et menace de conquérir tous les pays libres.
 Tandis que la guerre fait rage, les armées s'affrontant sans répis, un groupe de héros s'est formé et à accepté la quête consistant à détruire le mal à sa source.
 Ainsi, ${warrior.name} le guerrier, ${wizard.name} le mage et ${archer.name} l'archer se retrouvent face à ${boss.name} au cœur de son territoire.`);
-    console.log(`%c${warrior.name} %c: Je me batterai pour la liberté jusqu'à mon dernier souffle !`,"color:darkred","color:black")
-    console.log(`%c${wizard.name} %c: Je suis un serviteur du Feu Secret, détenteur de la flamme d’Anor. Le feu sombre ne vous servira à rien, ${boss.name}. Repartez dans l’ombre !`,"color:darkblue","color:black")
-    console.log(`%c${archer.name} %c: Mes flèches ne ratent jamais leur cible, tu connais les porc-épics ?`,"color:forestgreen","color:black")
-    console.log(`%c${boss.name} %c: STUPIDES MORTELS ! VOTRE PRÉSENCE ICI PROUVE QUE VOUS AVEZ ABANDONNÉ VOS ESPOIRS DE VIVRE !`,"color:darkmagenta","color:black;font-weight:600")
+    console.log(`%c${warrior.name}%c : Je me batterai pour la liberté jusqu'à mon dernier souffle !`,"color:darkred","color:black")
+    console.log(`%c${wizard.name}%c : Je suis un serviteur du Feu Secret, détenteur de la flamme d’Anor. Le feu sombre ne vous servira à rien, ${boss.name}. Repartez dans l’ombre !`,"color:darkblue","color:black")
+    console.log(`%c${archer.name}%c : Mes flèches ne ratent jamais leur cible, tu connais les porc-épics ?`,"color:forestgreen","color:black")
+    console.log(`%c${boss.name}%c : STUPIDES MORTELS ! VOTRE PRÉSENCE ICI PROUVE QUE VOUS AVEZ ABANDONNÉ VOS ESPOIRS DE VIVRE !`,"color:darkmagenta","color:black;font-weight:600")
     console.log("%c-------------- Le combat commence ! --------------","font-size : 30px;color:cadetblue")
 // END SETUP
 
-// TEST méthode riddle
-// sauron.hp = 2
-// sauron.cruelRiddle(riddles[1],answers[1],alive);
+// BOSS FIGHT
+while (boss.hp > 0 && alive.length > 0) {
 
-while (boss.hp > 0 && alive.length-1 > 0) {
-    //Choix de la posture
+    // Choix de la posture
     for (let i = 0; i < alive.length; i++) {
-        console.log(i);
-        console.log(alive);
-        console.log(targets);
+        console.log(i+1);
         choice = parseInt(prompt(`Choisissez la posture de ${alive[i].name} :
     (1) Attaque (+⚔/-♥)
     (2) Défense (-⚔/+♥)
@@ -137,45 +187,63 @@ while (boss.hp > 0 && alive.length-1 > 0) {
                 targets.push(alive[i]);
                 break;
             default: //Pas de posture particulières
-            console.log(`${alive[i].name} ne prend pas de posture particulière.
+            console.log(`%c${alive[i].name}%c ne prend pas de posture particulière.
     ♥ ${alive[i].hp} 
-    ⚔ ${alive[i].atk}`);
+    ⚔ ${alive[i].atk}`,`color:${alive[i].color}`,"color:black");
         }
     }
 
-    console.log(targets)
-    boss.hp -= 100;
-    console.log(`${boss.name} a ${boss.hp}`);
-    archer.hp = 0;
+    // Attaques
+    // Tour joueur
+    for (let i = 0; i < alive.length; i++) {
+        alive[i].fight(boss);
+    }
+    // Tour boss
+    if (boss.hp > boss.maxHp * 0.2) {
+        boss.attack(targets);
+    } else if (boss.hp < boss.maxHp * 0.2 && boss.hp > 0) {
+        choice = parseInt(Math.random()*riddles.length);
+        boss.cruelRiddle(riddles[choice],answers[choice],alive);
+    } else {
+        console.log(`%c${boss.name} %c: "MAIS...? C'EST IMPOSSIBLE ! ET MON ÉNIGME !?"`,"color:darkmagenta","color:black;font-weight:600;");        
+    }
 
-
-
-    //Reset des postures
-    for (let i = 0; i < alive.length; i++) { //posture offensive
+    // Reset des postures
+    for (let i = 0; i < alive.length; i++) { //Posture offensive
         if (alive[i].hp > 0) {
             if (alive[i].atk > baseAtk[i]) {
-                alive[i].hp /= 0.75;
-                alive[i].atk /= 1.4;
-                console.log(`${alive[i].name} relâche sa posture offensive: ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`);
-            } else if(alive[i].atk < baseAtk[i]) { //posture défensive
-                alive[i].hp /= 2.5;
-                alive[i].atk /= 0.5;
+                alive[i].hp = Math.floor(alive[i].hp/0.75);
+                alive[i].atk = Math.floor(alive[i].atk/1.4);
+                console.log(`%c${alive[i].name}%c relâche sa posture offensive: ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`,`color:${alive[i].color}`,"color:black");
+            } else if(alive[i].atk < baseAtk[i]) { //Posture défensive
+                alive[i].hp = Math.floor(alive[i].hp/2.5);
+                alive[i].atk = Math.floor(alive[i].atk/0.5);
                 targets.pop();
-                console.log(`${alive[i].name} relâche sa posture défensive: ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`);
+                console.log(`%c${alive[i].name}%c relâche sa posture défensive: ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`,`color:${alive[i].color}`,"color:black");
             } else {
-                console.log(`${alive[i].name} : ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`);
+                console.log(`%c${alive[i].name}%c : ♥ ${alive[i].hp} ⚔ ${alive[i].atk}`,`color:${alive[i].color}`,"color:black");
             }
         }
     }
 
     //Supression des morts
-    for (let i = 0; i < alive.length; i++) {
+    // alive.forEach(element => {
+    //     if (element.hp <= 0) {
+    //         console.log(`%c☠ %c${element.name}%c est mort.`,"font-size:20px",`color:${element.color}`,"color:black");
+    //         alive.splice(alive.indexOf(element),1);
+    //         console.log(alive);
+    //         targets.splice(alive.indexOf(element),1);
+    //     }
+    // });
+    for (let i = alive.length; i > 0; i--) {
         if (alive[i].hp <= 0) {
-            console.log(`${alive[i].name} est mort`);
+            console.log(`%c☠ %c${alive[i].name}%c est mort.`,"font-size:20px",`color:${alive[i].color}`,"color:black");
             alive.splice(i,1);
-            targets.splice(i,1);
-            console.log("Les survivants :");
             console.log(alive);
+            targets.splice(i,1);
         }
     }
 }
+// END BOSS FIGHT
+console.log("Game Over");
+alert("Game Over");

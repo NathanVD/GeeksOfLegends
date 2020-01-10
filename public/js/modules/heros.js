@@ -1,9 +1,11 @@
 //Classe de personnages
 export class Personnage {
-    constructor(nom,pv,attaque){
+    constructor(classe,nom,pv,attaque,couleur){
+        this.class = classe;
         this.name = nom;
         this.hp = pv;
         this.atk = attaque;
+        this.color = couleur;
     }
     attackPos(){
         this.atk *= 1.4;
@@ -27,9 +29,14 @@ Propriétés : nom, points de vie, points d’attaque, points de rage
 Postures : défense, attaque, normal
 */
 export class Guerrier extends Personnage {
-    constructor(nom,pv,attaque,statSupp){
-        super(nom,pv,attaque);
+    constructor(classe,nom,pv,attaque,couleur,statSupp){
+        super(classe,nom,pv,attaque,couleur);
         this.rage = statSupp;
+    }
+    fight(boss) {
+        boss.hp -= this.atk;
+        console.log(`%c${this.name}%c attaque %c${boss.name}%c et lui inflige ${this.atk} dégâts !!
+Il lui reste ♥${boss.hp}`,`color:${this.color}`,"color:black","color:darkmagenta","color:black");
     }
 }
 
@@ -39,9 +46,14 @@ Propriétés : nom, points de vie, points d’attaque, points de mana
 Postures : défense, attaque, normal
 */
 export class Mage extends Personnage {
-    constructor(nom,pv,attaque,statSupp){
-        super(nom,pv,attaque);
+    constructor(classe,nom,pv,attaque,couleur,statSupp){
+        super(classe,nom,pv,attaque,couleur);
         this.mana = statSupp;
+    }
+    fight(boss) {
+        boss.hp -= this.atk;
+        console.log(`%c${this.name}%c attaque %c${boss.name}%c et lui inflige ${this.atk} dégâts !!
+Il lui reste ♥${boss.hp}`,`color:${this.color}`,"color:black","color:darkmagenta","color:black");
     }
 }
 
@@ -51,8 +63,13 @@ Propriétés : nom, points de vie, points d’attaque, munitions
 Postures : défense, attaque, normal
 */
 export class Archer extends Personnage {
-    constructor(nom,pv,attaque,statSupp){
-        super(nom,pv,attaque);
+    constructor(classe,nom,pv,attaque,couleur,statSupp){
+        super(classe,nom,pv,attaque,couleur);
         this.arrows = statSupp;
+    }
+    fight(boss) {
+        boss.hp -= this.atk;
+        console.log(`%c${this.name}%c attaque %c${boss.name}%c et lui inflige ${this.atk} dégâts !!
+Il lui reste ♥${boss.hp}`,`color:${this.color}`,"color:black","color:darkmagenta","color:black");
     }
 }
