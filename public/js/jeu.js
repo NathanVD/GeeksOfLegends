@@ -6,6 +6,7 @@ import {Boss} from "./modules/bosses.js";
     let warrior = new Guerrier(prompt("Nom du guerrier ?"),0,0,0);
     let mage = new Mage(prompt("Nom du mage ?"),0,0,0);
     let archer = new Archer(prompt("Nom de l'archer ?"),0,0,0);
+    let players = [warrior,mage,archer];
 
     let pointsPool = [300,60]; //Health pool, Attack pool
     let confirm = false;
@@ -16,6 +17,8 @@ import {Boss} from "./modules/bosses.js";
     let sauron = new Boss("Sauron",300,300,60);
     let chronos = new Boss("Chronos",666,666,30);
     let lilith = new Boss("Lilith",250,250,70);
+    let riddles = ["Qu'est ce qui est petit et marron ?","Qu'est ce qui marche à 4 pattes le matin, à 2 pattes le midi et à 3 pattes le soir ?"]
+    let answers = ["marron","homme"]
 // END VARIABLES
 
 // FONTIONS
@@ -53,7 +56,7 @@ function distrib(hero,nomStat,stat,statHero) {
         pointsPool[1] -=  distrib(mage,"Attack Points",pointsPool[1],statHero);
         pointsPool[1] -=  distrib(archer,"Attack Points",pointsPool[1],statHero);
         do {
-            confirm = prompt(`Il vous reste ${pointsPool[0]}HP et ${pointsPool[1]}Atk en pool.
+            confirm = prompt(`Il vous reste ${pointsPool[0]} HP et ${pointsPool[1]} Atk en pool.
         Souhaitez vous confirmer ceci ?
             - Warrior : ♥ ${warrior.hp} / ⚔ ${warrior.atk}
             - Mage : ♥ ${mage.hp} / ⚔ ${mage.atk}
@@ -75,3 +78,7 @@ function distrib(hero,nomStat,stat,statHero) {
     console.log(mage)
     console.log(archer)
 // END SETUP
+
+// TEST méthode riddle
+sauron.hp = 2
+sauron.cruelRiddle(riddles[1],answers[1],players);
