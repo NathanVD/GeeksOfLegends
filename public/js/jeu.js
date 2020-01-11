@@ -2,10 +2,10 @@ import {Guerrier,Mage,Archer} from "./modules/heros.js";
 import {Boss} from "./modules/bosses.js";
 
 // VARIABLES
-    // Heros: Nom(.name),vie(.hp),attaque(.atk),couleur(.color),stat supp(.rage,.mana,.arrows)
-    let warrior = new Guerrier("le Guerrier","",100,20,"darkred",0);
-    let wizard = new Mage("le Mage","",100,20,"darkblue",0);
-    let archer = new Archer("l'Archer","",100,20,"forestgreen",0);
+    // Heros: Nom(.name),vie(.hp),attaque(.atk),stat supp(.special),couleur(.color),classe (.class)
+    let warrior = new Guerrier("",100,20,0,"darkred","le Guerrier");
+    let wizard = new Mage("",100,20,0,"darkblue","le Mage");
+    let archer = new Archer("",100,20,0,"forestgreen","l'Archer");
     let alive = [warrior,wizard,archer];
     let deads = [];
 
@@ -23,12 +23,18 @@ import {Boss} from "./modules/bosses.js";
     let riddles = [
         "Qu'est ce qui est petit et marron ?",
         "Qu'est ce qui marche à 4 pattes le matin, à 2 pattes le midi et à 3 pattes le soir ?",
-        "Est-ce que je mens ?"
+        "Quel est le nombre qui, divisé par sa moitié, donne son double ?",
+        "Jeune, je suis grande ; vieille, je suis petite mais tout au long de ma vie, je conserve mon éclat. Je m'éveille la nuit jusqu'au matin, et parfois d'un souffle, je m'éteins... Qui suis-je ?",
+        "Je tombe sans me faire mal ni faire de bruit, qui suis-je?",
+        "J'ai une gorge mais je ne peux pas parler, je coule mais ne me noie pas, j'ai un lit mais je ne dors jamais. Qui suis-je ?"
     ]
     let answers = [
         "marron",
         "homme",
-        "paradoxe"
+        "1",
+        "bougie",
+        "nuit",
+        "rivière"
     ];
 
     let choice,baseAtk;
@@ -60,11 +66,11 @@ function name(hero) {
     let name = prompt(`Nomme ${hero.class} :`);
     if (name == "") {
         switch (hero.class) {
-            case "Guerrier":
+            case "le Guerrier":
                 return "War";
-            case "Mage":
+            case "le Mage":
                 return "Wiz";
-            case "Archer":
+            case "l'Archer":
                 return "Arc";
         } 
     } else {
@@ -110,8 +116,8 @@ function distrib(hero,nomStat,stat,statHero) {
 
 // SETUP
     // mana et flèches
-    wizard.mana = manaPools[parseInt(Math.random()*3)];
-    archer.arrows = parseInt(Math.random()*5+7);
+    wizard.special = manaPools[parseInt(Math.random()*3)];
+    archer.special = parseInt(Math.random()*5+7);
 
     // noms
     do {
@@ -173,25 +179,25 @@ Ainsi, ${warrior.name} ${warrior.class}, ${wizard.name} ${wizard.class} et ${arc
 while (boss.hp > 0 && alive.length > 0) {
 
     // Choix de la posture
-    for (let i = 0; i < alive.length; i++) {
-        choice = parseInt(prompt(`Choisissez la posture de ${alive[i].name} :
-    (1) Attaque (+⚔/-♥)
-    (2) Défense (-⚔/+♥)
-    (3) Défaut (base ⚔/base ♥)`));
-        switch (choice) {
-            case 1: //Posture d'attaque
-                alive[i].attackPos();
-                break;
-            case 2: //Posture de défense
-                alive[i].defensePos();
-                targets.push(alive[i]);
-                break;
-            default: //Pas de posture particulières
-            console.log(`%c${alive[i].name}%c ne prend pas de posture particulière.
-    ♥ ${alive[i].hp} 
-    ⚔ ${alive[i].atk}`,`color:${alive[i].color}`,"color:black");
+        for (let i = 0; i < alive.length; i++) {
+            choice = parseInt(prompt(`Choisissez la posture de ${alive[i].name} :
+        (1) Attaque (+⚔/-♥)
+        (2) Défense (-⚔/+♥)
+        (3) Défaut (base ⚔/base ♥)`));
+            switch (choice) {
+                case 1: //Posture d'attaque
+                    alive[i].attackPos();
+                    break;
+                case 2: //Posture de défense
+                    alive[i].defensePos();
+                    targets.push(alive[i]);
+                    break;
+                default: //Pas de posture particulières
+                console.log(`%c${alive[i].name}%c ne prend pas de posture particulière.
+        ♥ ${alive[i].hp} 
+        ⚔ ${alive[i].atk}`,`color:${alive[i].color}`,"color:black");
+            }
         }
-    }
 
     // Attaques
     // Tour joueur
@@ -201,10 +207,10 @@ while (boss.hp > 0 && alive.length > 0) {
     // Tour boss
     if (boss.hp > boss.maxHp * 0.2) {
         boss.attack(targets);
-    } else if (boss.hp < boss.maxHp * 0.2 && boss.hp > 0) {
+    } else if (boss.hp <= boss.maxHp * 0.2 && boss.hp > 0) {
         choice = parseInt(Math.random()*riddles.length);
         boss.cruelRiddle(riddles[choice],answers[choice],alive);
-    } else {
+    } else if (boss.hp <= 0) {
         console.log(`%c${boss.name}%c : "MAIS...? C'EST IMPOSSIBLE ! ET MON ÉNIGME !?"`,"color:darkmagenta","color:black;font-weight:600;");        
     }
 
@@ -238,21 +244,22 @@ while (boss.hp > 0 && alive.length > 0) {
 }
 // END BOSS FIGHT
 
-alert("Game Over");
+// END MESSAGE
 if (boss.hp <= 0 && alive.length == 3) {
     console.log(`Vous avez vaincu %c${boss.name}%c !!! Félicitations, vous avez gagné !
-    Ainsi, la vaillance des héros aura sauvé le monde d'une destruction certaine.`,"color:darkmagenta","color:black");
+Ainsi, la vaillance des héros aura sauvé le monde d'une destruction certaine.`,"color:darkmagenta","color:black");
 } else if (boss.hp <= 0 && alive.length != 3){
     console.log(`Vous avez vaincu %c${boss.name}%c !!! Félicitations, vous avez gagné !
-    Ainsi, la vaillance des héros aura sauvé le monde d'une destruction certaine mais pas sans un prix.
-    En effet, ${deads.length} héros ont péris au combat.`,"color:darkmagenta","color:black");
+Ainsi, la vaillance des héros aura sauvé le monde d'une destruction certaine mais pas sans un prix.
+En effet, ${deads.length} héros ont péris au combat.`,"color:darkmagenta","color:black");
     if (deads.length > 1) {
-        console.log(`Le monde se souviendra de %c${deads[i].name}%c ${deads[i].class} et de %c${deads[i].name}%c ${deads[i].class}.`,`color:${deads[i].color}`,"color:black",`color:${deads[i].color}`,"color:black");
+        console.log(`Le monde se souviendra de %c${deads[0].name}%c ${deads[0].class} et de %c${deads[1].name}%c ${deads[1].class}.`,`color:${deads[0].color}`,"color:black",`color:${deads[1].color}`,"color:black");
     } else {
-        console.log(`Le monde se souviendra de %c${deads[i].name}%c ${deads[i].class}.`,`color:${deads[i].color}`,"color:black");    }
+        console.log(`Le monde se souviendra de %c${deads[0].name}%c ${deads[0].class}.`,`color:${deads[0].color}`,"color:black");    }
 } else {
     console.log(`Malheureusement, le groupe de héros se retrouva impuissant face à %c${boss.name}%c.
-    Après s'être débarassé d'eux et plus rien ne pouvant se mettre en travers de son chemin, %c${boss.name}%c conquérit les pays libres un à un à une vitesse phénoménale.
-    Ce fût bientôt le début d'un âge sombre pour le monde...
+Après s'être débarassé d'eux et plus rien ne pouvant se mettre en travers de son chemin, %c${boss.name}%c conquérit les pays libres un à un à une vitesse phénoménale.
+Ce fût bientôt le début d'un âge sombre pour le monde...
     %cGAME OVER`,"color:darkmagenta","color:black","color:darkmagenta","color:black","color:red;font-size:25px;font-weight:600");
 }
+alert("Game Over"); 
