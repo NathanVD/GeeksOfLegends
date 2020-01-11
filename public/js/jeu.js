@@ -3,18 +3,19 @@ import {Boss} from "./modules/bosses.js";
 
 // VARIABLES
     // Heros: Nom(.name),vie(.hp),attaque(.atk),couleur(.color),stat supp(.rage,.mana,.arrows)
-    let warrior = new Guerrier("Guerrier","",100,20,"darkred",0);
-    let wizard = new Mage("Mage","",100,20,"darkblue",0);
-    let archer = new Archer("Archer","",100,20,"forestgreen",0);
+    let warrior = new Guerrier("le Guerrier","",100,20,"darkred",0);
+    let wizard = new Mage("le Mage","",100,20,"darkblue",0);
+    let archer = new Archer("l'Archer","",100,20,"forestgreen",0);
     let alive = [warrior,wizard,archer];
+    let deads = [];
 
     let pointsPool, statHero, autoConfirm;
     let manaPools = [7,9,10];
 
     // Bosses : Nom,vie,vie max,attaque
-    let sauron = new Boss("Sauron",100,300,60);
-    let chronos = new Boss("Chronos",100,666,30);
-    let lilith = new Boss("Lilith",100,250,70);
+    let sauron = new Boss("Sauron",300,300,60);
+    let chronos = new Boss("Chronos",666,666,30);
+    let lilith = new Boss("Lilith",250,250,70);
     let bosses = [sauron,chronos,lilith];
     let targets = [warrior,wizard,archer];
     let boss;
@@ -56,7 +57,7 @@ function confirm(message,auto) {
 }
 // Nommer les héros
 function name(hero) {
-    let name = prompt(`Nom du ${hero.class} ?`);
+    let name = prompt(`Nomme ${hero.class} :`);
     if (name == "") {
         switch (hero.class) {
             case "Guerrier":
@@ -160,7 +161,7 @@ Souhaitez vous confirmer ceci ?
     // mise en situation
     console.log(`Une menace plane sur le monde. En effet, un mal ancestral s'est réveillé et menace de conquérir tous les pays libres.
 Tandis que la guerre fait rage, les armées s'affrontant sans répis, un groupe de héros s'est formé et à accepté la quête consistant à détruire le mal à sa source.
-Ainsi, ${warrior.name} le guerrier, ${wizard.name} le mage et ${archer.name} l'archer se retrouvent face à ${boss.name} au cœur de son territoire.`);
+Ainsi, ${warrior.name} ${warrior.class}, ${wizard.name} ${wizard.class} et ${archer.name} ${archer.class} se retrouvent face à ${boss.name} au cœur de son territoire.`);
     console.log(`%c${warrior.name}%c : Je me batterai pour la liberté jusqu'à mon dernier souffle !`,"color:darkred","color:black")
     console.log(`%c${wizard.name}%c : Je suis un serviteur du Feu Secret, détenteur de la flamme d’Anor. Le feu sombre ne vous servira à rien, ${boss.name}. Repartez dans l’ombre !`,"color:darkblue","color:black")
     console.log(`%c${archer.name}%c : Mes flèches ne ratent jamais leur cible, tu connais les porc-épics ?`,"color:forestgreen","color:black")
@@ -204,7 +205,7 @@ while (boss.hp > 0 && alive.length > 0) {
         choice = parseInt(Math.random()*riddles.length);
         boss.cruelRiddle(riddles[choice],answers[choice],alive);
     } else {
-        console.log(`%c${boss.name} %c: "MAIS...? C'EST IMPOSSIBLE ! ET MON ÉNIGME !?"`,"color:darkmagenta","color:black;font-weight:600;");        
+        console.log(`%c${boss.name}%c : "MAIS...? C'EST IMPOSSIBLE ! ET MON ÉNIGME !?"`,"color:darkmagenta","color:black;font-weight:600;");        
     }
 
     // Reset des postures
@@ -229,11 +230,29 @@ while (boss.hp > 0 && alive.length > 0) {
     for (let i = alive.length-1; i >= 0; i--) {
         if (alive[i].hp <= 0) {
             console.log(`%c☠ %c${alive[i].name}%c est mort.`,"font-size:20px",`color:${alive[i].color}`,"color:black");
+            deads.push(alive[i]);
             alive.splice(i,1);
             targets.splice(i,1);
         }
     }
 }
 // END BOSS FIGHT
-console.log("Game Over");
+
 alert("Game Over");
+if (boss.hp <= 0 && alive.length == 3) {
+    console.log(`Vous avez vaincu %c${boss.name}%c !!! Félicitations, vous avez gagné !
+    Ainsi, la vaillance des héros aura sauvé le monde d'une destruction certaine.`,"color:darkmagenta","color:black");
+} else if (boss.hp <= 0 && alive.length != 3){
+    console.log(`Vous avez vaincu %c${boss.name}%c !!! Félicitations, vous avez gagné !
+    Ainsi, la vaillance des héros aura sauvé le monde d'une destruction certaine mais pas sans un prix.
+    En effet, ${deads.length} héros ont péris au combat.`,"color:darkmagenta","color:black");
+    if (deads.length > 1) {
+        console.log(`Le monde se souviendra de %c${deads[i].name}%c ${deads[i].class} et de %c${deads[i].name}%c ${deads[i].class}.`,`color:${deads[i].color}`,"color:black",`color:${deads[i].color}`,"color:black");
+    } else {
+        console.log(`Le monde se souviendra de %c${deads[i].name}%c ${deads[i].class}.`,`color:${deads[i].color}`,"color:black");    }
+} else {
+    console.log(`Malheureusement, le groupe de héros se retrouva impuissant face à %c${boss.name}%c.
+    Après s'être débarassé d'eux et plus rien ne pouvant se mettre en travers de son chemin, %c${boss.name}%c conquérit les pays libres un à un à une vitesse phénoménale.
+    Ce fût bientôt le début d'un âge sombre pour le monde...
+    %cGAME OVER`,"color:darkmagenta","color:black","color:darkmagenta","color:black","color:red;font-size:25px;font-weight:600");
+}
